@@ -6,7 +6,7 @@ var userRoutes = require("./user/controller");
 var mongoose = require("mongoose");
 var mongoConfig = require("./config/mongoConfig.json");
 var bodyParser = require("body-parser");
-let Chat = require("./chatModule");
+let Chat = require("./chat/chatModule");
 var Service = require("./user/userService");
 
 mongoose
@@ -38,11 +38,6 @@ const io = require("socket.io")(server);
 
 io.on("connection", function (socket) {
   console.log("User Connected..");
-  let list = [];
-  Service.getMessages().then((data) => {
-    list = data;
-    io.emit("messages", list);
-  });
   let name;
   io.emit("notification", "A new user has connected");
 

@@ -1,5 +1,5 @@
 var User = require("./userModule");
-let Chat = require("../chatModule");
+let Chat = require("../chat/chatModule");
 
 const add = (req, res, next) => {
   new User({
@@ -26,8 +26,8 @@ const list = (req, res, next) => {
 
 const storeMessage = (message, name) => {
   new Chat({
-    content: message,
-    pseudo: name,
+    chat: message,
+    name: name,
     date: new Date(),
   }).save((err, data) => {
     if (err) console.log(err);
@@ -43,7 +43,7 @@ const getMessages = async (req, res, next) => {
     if (err) console.log(err);
     else {
       console.log(data);
-      return res.json(data);
+      res?.json(data);
     }
   });
 };
