@@ -27,17 +27,18 @@ const getAllJoueur = (req, res, next) => {
 };
 
 const getJoueurById = (req, res, next) => {
-  Joueur.findOne({ id: req.params.id }, (err, data) => {
+  Joueur.findById({ _id: req.params.id }, (err, data) => {
     if (err) console.log(err);
     else {
       console.log(data);
-      res.json(data);
+      if (res) res.json(data);
+      else return data;
     }
   });
 };
 
 const deleteJoueur = (req, res, next) => {
-  Joueur.deleteOne({ id: req.params.id }, (err, data) => {
+  Joueur.deleteOne({ _id: req.params.id }, (err, data) => {
     if (err) console.log(err);
     else {
       console.log(data);
@@ -46,23 +47,22 @@ const deleteJoueur = (req, res, next) => {
   });
 };
 
-const attaque = (req, res, next) => {
-  let attaque = Joueur.findById({ id: req.params.idAttaque });
-  Joueur.updateOne(
-    { id: req.params.idAttaque },
-    { $set: { score: score + 10 } },
+const attaque = async (req, res, next) => {
+  console.log(req.params);
+  Joueur.findByIdAndUpdate(
+    { _id: req.params.idAttaque },
+    { $inc: { score: 10 } },
     (err, data) => {
       if (err) console.log(err);
       else {
         console.log(data);
-        res.json(data);
       }
     }
   );
-  let victime = Joueur.findById({ id: req.params.idVictime });
-  Joueur.updateOne(
-    { id: req.params.idVictime },
-    { $set: { health: health - 20 } },
+
+  Joueur.findByIdAndUpdate(
+    { _id: req.params.idVictime },
+    { $inc: { sante: -20 } },
     (err, data) => {
       if (err) console.log(err);
       else {
@@ -76,8 +76,8 @@ const attaque = (req, res, next) => {
 const addPartie = (req, res, next) => {
   new Partie({
     nom: req.body.nom,
-    joueur_1: req.body.idJoueur_1,
-    joueur_2: req.body.idJoueur_2,
+    joueur_1: req.body.joueur_1,
+    joueur_2: req.body.joueur_2,
     etat: "en cours",
   }).save((err, data) => {
     if (err) console.log(err);

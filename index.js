@@ -7,6 +7,7 @@ var mongoose = require("mongoose");
 var mongoConfig = require("./config/mongoConfig.json");
 var bodyParser = require("body-parser");
 var Service = require("./joueur/joueurService");
+var Partie = require("./partie/partieModule");
 
 mongoose
   .connect(mongoConfig.uri, {
@@ -39,9 +40,19 @@ io.on("connection", function (socket) {
   console.log("User Connected..");
 
   socket.on("newPartie", (data) => {
-    io.emit("newPartie", data);
-    Service.addPartie(data);
     console.log(data);
+    io.emit("newPartie", data);
+    new Partie({
+      nom: data.nom,
+      joueur_1: data.joueur_1,
+      joueur_2: data.joueur_2,
+      etat: "en cours",
+    }).save((err, data) => {
+      if (err) console.log(err);
+      else {
+        console.log(data);
+      }
+    });
   });
 });
 

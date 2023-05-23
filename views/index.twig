@@ -3,6 +3,13 @@
     <html lang="en">
     <meta charset="utf-8" />
     <script src="/socket.io/socket.io.js"></script>
+    <style>
+      .divv{
+        display: flex;
+        flex-direction: column;
+        width: 400px;
+      }
+    </style>
   </head>
   <body>
     <script>
@@ -20,7 +27,7 @@
         document.body.append(nomJ1)
 
         let nomJ2 = document.createElement("p")
-        nomJ2.innerText = "Id Joueur 2 :" + data.nomJ2
+        nomJ2.innerText = "Id Joueur 2 :" + data.joueur_2
         nomJ2.style.textAlign = "center"
         nomJ2.style.paddingBottom = "20px"
         document.body.append(nomJ2)
@@ -37,11 +44,14 @@
         })
       } 
     </script>
+      <div class="divv">
         <label for="nom">Nom Partie:</label><input type="text" name="nom" id="nom"/>
         <label for="idJoueur_1">ID Joueur 1:</label><input type="text" name="idJoueur_1" id="j1"/>
         <label for="idJoueur_2">ID Joueur 2:</label><input type="text" name="idJoueur_2" id="j2"/>
-        <button onclick="createPartie()">Envoyer</button>
-
+        <div><button onclick="createPartie()">Envoyer</button>
+          <button>Afficher stat</button></div>
+      </div>
+        
     </form>
   </body>
 </html>
