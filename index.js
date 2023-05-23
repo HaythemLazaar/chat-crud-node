@@ -2,12 +2,11 @@ var http = require("http");
 var express = require("express");
 var twig = require("twig");
 var app = express();
-var userRoutes = require("./user/controller");
+var joueurRoutes = require("./joueur/joueurController");
 var mongoose = require("mongoose");
 var mongoConfig = require("./config/mongoConfig.json");
 var bodyParser = require("body-parser");
-let Chat = require("./chat/chatModule");
-var Service = require("./user/userService");
+var Service = require("./joueur/joueurService");
 
 mongoose
   .connect(mongoConfig.uri, {
@@ -21,7 +20,7 @@ mongoose
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json());
-app.use("/users", userRoutes);
+app.use("/user", joueurRoutes);
 app.set("views", "./views");
 app.set("view engine", "twig");
 
@@ -38,22 +37,11 @@ const io = require("socket.io")(server);
 
 io.on("connection", function (socket) {
   console.log("User Connected..");
-  let name;
-  io.emit("notification", "A new user has connected");
 
-  socket.on("msg", (data) => {
-    io.emit("msg", data);
+  socket.on("newPartie", (data) => {
+    io.emit("newPartie", data);
+    Service.addPartie(data);
     console.log(data);
-    Service.storeMessage(data, name);
-    io.emit("notification", "new message");
-  });
-  socket.on("name", (data) => {
-    io.emit("name", data);
-    name = data;
-  });
-  socket.on("userIsTyping", (data) => {
-    io.emit("userIsTyping", data);
-    name = data;
   });
 });
 

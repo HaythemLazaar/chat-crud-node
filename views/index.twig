@@ -7,10 +7,41 @@
   <body>
     <script>
       socket = io.connect()
-      socket.on("messages", (data) => {
-        console.log(data)
+      socket.on("newPartie", (data) => {
+        let nom = document.createElement("p")
+        nom.innerText = "Partie :" + data.nom
+        nom.style.textAlign = "center"
+        nom.style.paddingTop = "20px"
+        document.body.append(nom)
+
+        let nomJ1 = document.createElement("p")
+        nomJ1.innerText = "Id Joueur 1 :" + data.joueur_1
+        nomJ1.style.textAlign = "center"
+        document.body.append(nomJ1)
+
+        let nomJ2 = document.createElement("p")
+        nomJ2.innerText = "Id Joueur 2 :" + data.nomJ2
+        nomJ2.style.textAlign = "center"
+        nomJ2.style.paddingBottom = "20px"
+        document.body.append(nomJ2)
       })
+      const createPartie = () => {
+        let nom = document.getElementById("nom").value
+        let j1 = document.getElementById("j1").value 
+        let j2 = document.getElementById("j2").value 
+        console.log()
+        socket.emit("newPartie", {
+          nom: nom,
+          joueur_1: j1,
+          joueur_2: j2,
+        })
+      } 
     </script>
-    <h1>Home</h1>
+        <label for="nom">Nom Partie:</label><input type="text" name="nom" id="nom"/>
+        <label for="idJoueur_1">ID Joueur 1:</label><input type="text" name="idJoueur_1" id="j1"/>
+        <label for="idJoueur_2">ID Joueur 2:</label><input type="text" name="idJoueur_2" id="j2"/>
+        <button onclick="createPartie()">Envoyer</button>
+
+    </form>
   </body>
 </html>
